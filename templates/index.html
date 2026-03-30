@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="refresh" content="10" />
+  <title>Container Stats</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #7dd3fc;
+      letter-spacing: 0.05em;
+    }
+
+    header p {
+      margin-top: 0.4rem;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .card {
+      background: #1e2130;
+      border: 1px solid #2d3348;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.2;
+    }
+
+    .card-sub {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 0.3rem;
+    }
+
+    .bar-wrap {
+      background: #2d3348;
+      border-radius: 999px;
+      height: 6px;
+      margin-top: 0.75rem;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    .bar-cpu  { background: #38bdf8; }
+    .bar-mem  { background: #a78bfa; }
+    .bar-disk { background: #34d399; }
+
+    footer {
+      margin-top: 3rem;
+      color: #475569;
+      font-size: 0.78rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📦 Container Stats</h1>
+    <p>Host: <strong style="color:#7dd3fc">{{ stats.hostname }}</strong> &nbsp;·&nbsp; Auto-refreshes every 10 s</p>
+  </header>
+
+  <div class="grid">
+
+    <!-- Uptime -->
+    <div class="card">
+      <div class="card-title">⏱ Uptime</div>
+      <div class="card-value">{{ stats.uptime }}</div>
+      <div class="card-sub">Since container start</div>
+    </div>
+
+    <!-- Platform -->
+    <div class="card">
+      <div class="card-title">🖥 Platform</div>
+      <div class="card-value" style="font-size:1.1rem">{{ stats.platform }}</div>
+      <div class="card-sub">Python {{ stats.python_version }}</div>
+    </div>
+
+    <!-- CPU -->
+    <div class="card">
+      <div class="card-title">⚡ CPU Usage</div>
+      <div class="card-value">{{ stats.cpu_percent }}<span style="font-size:1rem;color:#94a3b8">%</span></div>
+      <div class="card-sub">{{ stats.cpu_count }} logical core(s)</div>
+      <div class="bar-wrap"><div class="bar bar-cpu" style="width:{{ stats.cpu_percent }}%"></div></div>
+    </div>
+
+    <!-- Memory -->
+    <div class="card">
+      <div class="card-title">🧠 Memory</div>
+      <div class="card-value">{{ stats.mem_percent }}<span style="font-size:1rem;color:#94a3b8">%</span></div>
+      <div class="card-sub">{{ stats.mem_used_mb }} MB / {{ stats.mem_total_mb }} MB</div>
+      <div class="bar-wrap"><div class="bar bar-mem" style="width:{{ stats.mem_percent }}%"></div></div>
+    </div>
+
+    <!-- Disk -->
+    <div class="card">
+      <div class="card-title">💾 Disk (/)</div>
+      <div class="card-value">{{ stats.disk_percent }}<span style="font-size:1rem;color:#94a3b8">%</span></div>
+      <div class="card-sub">{{ stats.disk_used_gb }} GB / {{ stats.disk_total_gb }} GB</div>
+      <div class="bar-wrap"><div class="bar bar-disk" style="width:{{ stats.disk_percent }}%"></div></div>
+    </div>
+
+    <!-- Network -->
+    <div class="card">
+      <div class="card-title">🌐 Network I/O</div>
+      <div class="card-value" style="font-size:1rem">↑ {{ stats.net_bytes_sent_mb }} MB</div>
+      <div class="card-sub">↓ {{ stats.net_bytes_recv_mb }} MB received</div>
+    </div>
+
+  </div>
+
+  <footer>
+    Built with Flask &amp; psutil · Containerized with Docker
+  </footer>
+
+</body>
+</html>
