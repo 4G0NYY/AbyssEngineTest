@@ -23,8 +23,8 @@ COPY templates/ templates/
 # Drop to non-root user
 USER appuser
 
-ENV PORT=8080
-EXPOSE 8080
+ENV PORT=9898
+EXPOSE 9898
 
 # Use gunicorn for production-grade serving
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "--timeout", "30", "app:app"]
